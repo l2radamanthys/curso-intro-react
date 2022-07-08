@@ -11,19 +11,37 @@ const defautlTodos = [
 
 
 function App() {
-  const [todos, setTodos] = React.useState(defautlTodos);
+  const localStorageTodos = localStorage.getItem('TODO_V1');
+  console.log(":", localStorageTodos)
+  let parsedTodos;
+  if (!!localStorageTodos) {
+    parsedTodos = JSON.parse(localStorageTodos);
+  } else {
+    console.log("reset")
+    localStorage.setItem('TODOS_V1', JSON.stringify(defautlTodos));
+    parsedTodos = defautlTodos;
+  }
+
+  const [todos, setTodos] = React.useState(parsedTodos);
   const [searchValue, setSearchValue] = React.useState("");
   
   const totalTodos = todos.length;
   const completedTodos = todos.filter(todo => !!todo.completed).length;
   const searchedTodos = todos.filter(todo => todo.text.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
 
+  const saveTodos = (newTodos) => {
+    const stringifiedTodos = JSON.stringify(newTodos);
+    localStorage.setItem("TODOS_V1", stringifiedTodos);
+    setTodos(newTodos);
+    console.log("::", newTodos)
+  }; 
+
   const toggleTodo = (key) => {
     const newTodos = [...todos];
     const todoIdx = newTodos.findIndex(todo => todo.text === key); 
     if (todoIdx !== undefined) {
       newTodos[todoIdx].completed = !newTodos[todoIdx].completed; 
-      setTodos(newTodos);
+      saveTodos(newTodos);
     }
   };
 
@@ -32,7 +50,7 @@ function App() {
     const todoIdx = newTodos.findIndex(todo => todo.text === key); 
     if (todoIdx !== undefined) {
       newTodos.splice(todoIdx, 1);
-      setTodos(newTodos);
+      saveTodos(newTodos);
     }
   };
 
