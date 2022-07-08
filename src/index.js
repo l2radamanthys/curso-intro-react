@@ -8,9 +8,7 @@ import App from './App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App saludo="Hola como estas">
-      <h1>Esto es un titulo</h1>  
-    </App>
+    <App />
   </React.StrictMode>
 );
 
